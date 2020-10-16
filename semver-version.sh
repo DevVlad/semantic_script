@@ -53,8 +53,8 @@ then
       echo "v$APP_VERSION - $(date) $(ls -1 | wc -l)";
       git log --merges --pretty=oneline "$LATEST_TAG...$APP_VERSION" | grep pull; echo "";
       cat CHANGELOG.md;
-    } >> CHANGELOG.new
-    mv ./CHANGELOGS/CHANGELOG{.new,.md}
+    } >> CHANGELOGS/CHANGELOG.new
+    mv CHANGELOGS/CHANGELOG{.new,.md}
     git add .
     git commit -m "submitting changelog for $APP_VERSION - $(date) $(ls -1 | wc -l)"
     git push origin $CURRENT_BRANCH
