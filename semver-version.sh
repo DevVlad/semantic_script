@@ -48,7 +48,7 @@ echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     DIRECTORY="CHANGELOGS"
-    NOW="$(date)--utc +%Y%m%d_%H%M%SZ"
+    NOW="$(date --utc +%Y%m%d_%H%M%SZ)"
     if [ ! -d "$DIRECTORY" ]; then
       mkdir "$DIRECTORY"
     fi
