@@ -48,6 +48,9 @@ echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     DIRECTORY="CHANGELOGS"
+    if [ ! -d "$DIRECTORY" ]; then
+      mkdir "$DIRECTORY"
+    fi
     MESSAGE=""
     if [ "$2" ]
     then
@@ -56,13 +59,7 @@ then
     git tag -a $APP_VERSION -m "$MESSAGE"
     git push origin $CURRENT_BRANCH $APP_VERSION
     { 
-      echo "v$APP_VERSION - $(date) $(ls -1 | wc -l)";
-      if [ ! -d "$DIRECTORY" ]; then
-        mkdir "$DIRECTORY"
-      fi
-      git log --merges --pretty=oneline "$LATEST_TAG...$APP_VERSION" | grep pull; echo "";
-      cat ./"$DIRECTORY"/CHANGELOG.md;
-    } >> ./"$DIRECTORY"/CHANGELOG.new
+      echo "v$APP_VERSION - $(date) $(ls -1 | wc -l)"; git log --merges --pretty=oneline "$LATEST_TAG...$APP_VERSION" | grep pull; echo ""; cat ./"$DIRECTORY"/CHANGELOG.md; } >> ./"$DIRECTORY"/CHANGELOG.new
     mv ./"$DIRECTORY"/CHANGELOG{.new,.md}
     git add .
     git commit -m "submitting changelog for $APP_VERSION - $(date) $(ls -1 | wc -l)"
