@@ -59,8 +59,11 @@ then
     git tag -a $APP_VERSION -m "$MESSAGE"
     git push origin $CURRENT_BRANCH $APP_VERSION
     { 
-      echo "v$APP_VERSION - $(date) $(ls -1 | wc -l)"; git log --merges --pretty=oneline "$LATEST_TAG...$APP_VERSION" | grep pull; echo ""; cat ./"$DIRECTORY"/CHANGELOG.md; } >> ./"$DIRECTORY"/CHANGELOG.new
-    mv ./"$DIRECTORY"/"CHANGELOG-$(date)"{.new,.md}
+      echo "v$APP_VERSION - $(date) $(ls -1 | wc -l)";
+      git log --merges --pretty=oneline "$LATEST_TAG...$APP_VERSION" | grep pull; echo "";
+      cat ./"$DIRECTORY"/"CHANGELOG-$APP_VERSION".md;
+    } >> ./"$DIRECTORY"/"CHANGELOG-$APP_VERSION".new
+    mv ./"$DIRECTORY"/"CHANGELOG-$APP_VERSION"{.new,.md}
     git add .
     git commit -m "submitting changelog for $APP_VERSION - $(date) $(ls -1 | wc -l)"
     git push origin $CURRENT_BRANCH
