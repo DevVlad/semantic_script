@@ -9,10 +9,11 @@ LATEST_REV=${LATEST_TAG#*.*.}
 MINOR=${LATEST_TAG#*.}
 MINOR=${MINOR%${LATEST_REV}}
 MINOR=${MINOR%?}
-NEW_REV=`git rev-list --all --count`
+NEW_REV=$(($LATEST_REV+1))
 if [ "$1" = "minor" ]
 then
   MINOR=$(($MINOR+1))
+  NEW_REV=0
   echo "bumping minor version to $MINOR"
 fi
 if [ "$1" = "major" ]
@@ -37,16 +38,19 @@ then
 	echo "No changes on found"
 	exit;
 fi
-read -p "Push new git tag? " -n 1 -r
+read -p "Push new git tag (y/n)? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    git tag -a $APP_VERSION -m ""
-    git push origin $CURRENT_BRANCH $APP_VERSION
-    #write nice git log to new file and concatenate with old file
+    MESSAGE=""
+    if [ "$1" = "major" ]
+    then
+      MESSAGE="$2"
+    fi
     { echo "v$APP_VERSION - $(date) $(ls -1 | wc -l)"; git log --merges --pretty=oneline "$LATEST_TAG...$APP_VERSION" | grep pull; echo ""; cat CHANGELOG.md; } >> CHANGELOG.new
-    mv CHANGELOG{.new,.md}
+    mv ./CHANGELOGS/CHANGELOG-$(date){.new,.md}
     git add .
-    git commit -m "submitting changelog $(date) $(ls -1 | wc -l)"
-    git push origin $CURRENT_BRANCH
+    git commit -m "submitting changelog for $APP_VERSION - $(date) $(ls -1 | wc -l)"
+    git tag -a $APP_VERSION -m $MESSAGE
+    git push origin $CURRENT_BRANCH $APP_VERSION
 fi
