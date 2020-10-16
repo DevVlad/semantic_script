@@ -43,14 +43,18 @@ echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     MESSAGE=""
-    if [ "$1" = "major" ]
+    if [ "$2" ]
     then
       MESSAGE="$2"
     fi
-    git tag -a $APP_VERSION -m $MESSAGE
+    git tag -a $APP_VERSION -m "$MESSAGE"
     git push origin $CURRENT_BRANCH $APP_VERSION
-    { echo "v$APP_VERSION - $(date) $(ls -1 | wc -l)"; git log --merges --pretty=oneline "$LATEST_TAG...$APP_VERSION" | grep pull; echo ""; cat CHANGELOG.md; } >> CHANGELOG.new
-    mv ./CHANGELOGS/CHANGELOG-$(date){.new,.md}
+    { 
+      echo "v$APP_VERSION - $(date) $(ls -1 | wc -l)";
+      git log --merges --pretty=oneline "$LATEST_TAG...$APP_VERSION" | grep pull; echo "";
+      cat CHANGELOG.md;
+    } >> CHANGELOG.new
+    mv ./CHANGELOGS/CHANGELOG{.new,.md}
     git add .
     git commit -m "submitting changelog for $APP_VERSION - $(date) $(ls -1 | wc -l)"
     git push origin $CURRENT_BRANCH
