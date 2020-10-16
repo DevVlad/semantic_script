@@ -25,7 +25,7 @@ then
 fi
 if [ "$1" = "revision" ]
 then
-  NEW_REV=$(($NEW_REV+1))
+  # NEW_REV already moved + 1
   echo "bumping revision version to $NEW_REV"
 fi
 if [ -z "$MINOR" ]
@@ -60,7 +60,7 @@ then
     git push origin $CURRENT_BRANCH $APP_VERSION
     { 
       echo "v$APP_VERSION - $(date) $(ls -1 | wc -l)"; git log --merges --pretty=oneline "$LATEST_TAG...$APP_VERSION" | grep pull; echo ""; cat ./"$DIRECTORY"/CHANGELOG.md; } >> ./"$DIRECTORY"/CHANGELOG.new
-    mv ./"$DIRECTORY"/CHANGELOG{.new,.md}
+    mv ./"$DIRECTORY"/"CHANGELOG-$(date)"{.new,.md}
     git add .
     git commit -m "submitting changelog for $APP_VERSION - $(date) $(ls -1 | wc -l)"
     git push origin $CURRENT_BRANCH
