@@ -23,7 +23,7 @@ then
   MAJOR=$(($MAJOR+1))
   echo "bumping major version to $MAJOR"
 fi
-if [ "$1" = "revision" ]
+if [ "$1" = "patch" ]
 then
   # NEW_REV already moved + 1
   echo "bumping revision version to $NEW_REV"
